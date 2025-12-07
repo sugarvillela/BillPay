@@ -1,0 +1,57 @@
+.calPanel {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 20px;
+}
+.panelArrow {
+    font-size: 30px;
+    text-decoration: none !important;
+    cursor: pointer;
+}
+.calH {
+    width: 14% !important;
+    border: solid 2px;
+    text-align: center;
+}
+.calD {
+    width: 14% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+.calBox {
+    position: relative; /* Essential for positioning the content */
+    width: 100%; /* Ensures it takes the full width of the col-md-1 parent */
+    padding-bottom: 60%; /* Makes height equal to 0.8 * width */
+    height: 0; /* Collapses the div's height, allowing padding-bottom to define it */
+    overflow: hidden; /* Hides content that might overflow if not positioned correctly */
+}
+.calDay {
+    position: absolute; /* Positions content relative to the container */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 5px;
+}
+.calNull {
+    border: solid 1px;
+    background-color: lightgrey;
+}
+.calActive {
+    border: solid 1px;
+    background-color: whitesmoke;
+}
+.calNow {
+    border: solid 1px red;
+    background-color: lightpink;
+}
+.itemb {
+    color: red;
+    font-size: 14px;
+}
+.itemi {
+    color: green;
+    font-size: 14px;
+}
+
