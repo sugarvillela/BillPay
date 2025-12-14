@@ -3,6 +3,31 @@ const CAL_ACTIVE = "calDay calActive";
 const CAL_NOW = "calDay calNow";
 
 const DateMath = (() => {
+    const yyyymmdd = (isoString) => {
+        let yyyy, mm, dd;
+        
+        //2025-12-03T
+        if(isoString){
+            yyyy = isoString.substring(0, 4);
+            mm = isoString.substring(5, 7);
+            dd = isoString.substring(8, 10);
+        }
+        else{
+            date = new Date();
+            yyyy = date.getFullYear();
+            mm = String(date.getMonth() + 1).padStart(2, '0');
+            dd = String(date.getDate()).padStart(2, '0');
+            
+        }
+
+        return`${yyyy}-${mm}-${dd}`;
+    };
+    const addDayFromDate = (items) => {
+        for(let item of items){
+            item.day = item.startDate.substring(8, 10) - 0;
+        }
+        return items;
+    };
     const getMonthObj = (date) => {
         const mFirst = new Date(date.getFullYear(), date.getMonth(), 1);
         const mLast = new Date(date.getFullYear(), date.getMonth() + 1, 0);
@@ -112,12 +137,13 @@ const DateMath = (() => {
             return {...item, day: day};
         });
     };
+    
     return {
+        yyyymmdd: (date) => yyyymmdd(date),
+        addDayFromDate: (items) => addDayFromDate(items),
         getMonthObj: (dateObj) => getMonthObj(dateObj),
         findStartDate: (d) => findStartDate(d),
         compareMonth: (a, b) => compareMonth(a, b),
         genIntervalItems: (mObj, item) => genIntervalItems(mObj, item)
     };
 })();
-
-

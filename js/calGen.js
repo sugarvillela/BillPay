@@ -3,15 +3,15 @@ const getMonthlySource = (p) => {
     
     const addItems = (mObj) => {
         items = Store.getMonthlyItems(p);
-        const offset = mObj.mFirst.getDay();
-        
-        for(let i = 0; i < items.length; i++){
-            const item = items[i];
+        items = DateMath.addDayFromDate(items); // need day as number
+        const offset = mObj.mFirst.getDay();    // position of first day in table
+
+        for(let item of items){
             const then = new Date(item.startDate);
-            if(DateMath.compareMonth(then, mObj.mFirst) >= 0){
+            if(DateMath.compareMonth(then, mObj.mFirst) >= 0){// skip if before start date
                 const dObj = mObj.calList[item.day + offset - 1];
 
-                if(!dObj.hasOwnProperty("items")){
+                if(!dObj.hasOwnProperty("items")){// allow more than one item per day
                     dObj.items = [];
                 }
                 dObj.items.push(item);
@@ -99,6 +99,10 @@ const CalGen = (() => {
         const div = document.createElement("div");
         div.className = "item" + item.p;    // text color
         div.title = item.comment;           // tooltip for comment
+        div.addEventListener('dblclick', () => {
+            openEdit(item.p, item.name);
+        });
+
         div.appendChild(
             document.createTextNode(
                 `${item.name} $${item.amount}`
@@ -154,8 +158,7 @@ const CalGen = (() => {
         init: () => init(),
         mInc: () => changeMonth(1),
         mDec: () => changeMonth(-1),
+        changeMonth: (n) => changeMonth(n),
         gen: () => gen()
     };
 })();
-
-

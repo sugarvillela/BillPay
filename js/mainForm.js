@@ -1,5 +1,4 @@
 
-
 const getMainForm = (props) => {
     const {p, op, headerText, edit} = props;
     const formName = "MainForm" + p + op;
@@ -11,7 +10,7 @@ const getMainForm = (props) => {
     
     const idName = Id.name(p, op);
     const idAmount = Id.amount(p, op);
-    const idDay = Id.day(p, op);
+    const idDate = Id.date(p, op);
     const idInterval = Id.interval(p, op);
     const idComment = Id.comment(p, op);
     
@@ -20,10 +19,11 @@ const getMainForm = (props) => {
     const disableSubmit = edit? "" : "disabled";
      
     const patterns = {
-        text: /[a-zA-Z][a-zA-Z0-9]*/,
+        text: /^[a-zA-Z][a-zA-Z0-9]*$/,
         money: /^\d+(\.\d{2})?$/,
         numeric: /^\d+$/,
-        any: /^.*$/
+        date: /^\d{4}-\d{2}-\d{2}$/,
+        any: /.*/
     };
     
     const clear = () => {
@@ -66,7 +66,7 @@ const getMainForm = (props) => {
     const accept = () => {
         const elName = document.getElementById(idName);
         const elAmount = document.getElementById(idAmount);
-        const elDay = document.getElementById(idDay);
+        const elDate = document.getElementById(idDate);
         const elInterval = document.getElementById(idInterval);
         const elComment = document.getElementById(idComment);
       
@@ -80,16 +80,16 @@ const getMainForm = (props) => {
         const data = {
             name: name,
             amount: elAmount.value,
-            day: elDay.value,
+            startDate: elDate.value,
             interval: Number(elInterval.value),
             comment: elComment.value,
-            startDate: DateMath.findStartDate(elDay.value),
             p: p
         };
 
         Store.upsert(p, data);
         Store.toConsole();
         genListForms();
+        CalGen.changeMonth(0);
     };
 
     // generate form groups by type
@@ -116,8 +116,22 @@ const getMainForm = (props) => {
                 <div id=${idGroup} class="${class1}">
                     <label for="${idInput}" >${labelText}</label>
                     <textarea class="${class2}" rows="5" id="${idInput}" 
-                        oninput="${formName}.validate('${name}', '${pattern}')" 
+                        onchange="${formName}.validate('${name}', '${pattern}')" 
                            name="${idInput}" ></textarea>
+                </div>`;
+        },
+        date: (item) => {
+            const {name, labelText, placeholder, pattern} = item;
+            const idInput = p + op + name;
+            const idGroup = "group" + idInput;
+            const value = DateMath.yyyymmdd();
+
+            return `
+                <div id=${idGroup} class="${class1}">
+                    <label for="${idInput}" >${labelText}</label></br>
+                    <input type="date" id="${idInput}"  value="${value}" class="${class2}" 
+                        oninput="${formName}.validate('${name}', '${pattern}')" 
+                           name="${idInput}" >
                 </div>`;
         }
     };
@@ -134,7 +148,8 @@ const getMainForm = (props) => {
         const items = [
             {name: "name", labelText: "Name", placeholder: "Enter name", inputType: "text", pattern: "text"},
             {name: "amount", labelText: "Amount", placeholder: "Enter amount", inputType: "text", pattern: "money"},
-            {name: "day", labelText: "Day of Month", placeholder: "Day of month", inputType: "text", pattern: "numeric"},
+            //{name: "day", labelText: "Day of Month", placeholder: "Day of month", inputType: "text", pattern: "numeric"},
+            {name: "date", labelText: "Start Date", placeholder: "mm/dd/yyyy", inputType: "date", pattern: "date"},
             {name: "interval", labelText: "Interval", placeholder: "Interval in days (0 to bypass)", inputType: "text", pattern: "numeric"},
             {name: "comment", labelText: "Comment", placeholder: "", inputType: "textArea", pattern: "any"}
         ];

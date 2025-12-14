@@ -1,3 +1,23 @@
+var openEdit = (p, selectedName) => {
+    const values = Store.findByName(p, selectedName);
+    if(values){
+        const nextIdName = Id.name(p, OP_EDIT);
+        const nextIdAmount = Id.amount(p, OP_EDIT);
+        const nextIdDate = Id.date(p, OP_EDIT);
+        const nextIdInterval = Id.interval(p, OP_EDIT);
+        const nextIdComment = Id.comment(p, OP_EDIT);
+        const nextIdModal = Id.modal(p, OP_EDIT);
+
+        document.getElementById(nextIdName).value = values.name;
+        document.getElementById(nextIdAmount).value = values.amount;
+        document.getElementById(nextIdDate).value = DateMath.yyyymmdd(values.startDate);
+        document.getElementById(nextIdInterval).value = values.interval;
+        document.getElementById(nextIdComment).value = values.comment;
+
+        const m = document.getElementById(nextIdModal);
+        new bootstrap.Modal(m).show();
+    }
+};
 const getListForm = (props) => {
     const {p, op, headerText} = props;
     
@@ -8,40 +28,22 @@ const getListForm = (props) => {
     let selectedName = "";
     let names;
     
-    const nextIdName = Id.name(p, OP_EDIT);
-    const nextIdAmount = Id.amount(p, OP_EDIT);
-    const nextIdDay = Id.day(p, OP_EDIT);
-    const nextIdInterval = Id.interval(p, OP_EDIT);
-    const nextIdComment = Id.comment(p, OP_EDIT);
-    const nextIdModal = Id.modal(p, OP_EDIT);
-    
     const onChange = (index) => {
         selectedName = names[index];
         document.getElementById(Id.submit(p, op)).disabled = false;
     };
 
     const accept = () => {
-        let values;
-        
         if(op === OP_REMOVE){
             Store.removeByName(p, selectedName);
-            selectedName = "";
+            
             Store.toConsole();
             genListForms();
         }
-        else if((values = Store.findByName(p, selectedName))){
-            genForms();
-            selectedName = "";
-            
-            document.getElementById(nextIdName).value = values.name;
-            document.getElementById(nextIdAmount).value = values.amount;
-            document.getElementById(nextIdDay).value = values.day;
-            document.getElementById(nextIdInterval).value = values.interval;
-            document.getElementById(nextIdComment).value = values.comment;
-            
-            const m = document.getElementById(nextIdModal);
-            new bootstrap.Modal(m).show();
+        else {
+            openEdit(p, selectedName);
         }
+        selectedName = "";
     };
     
     const genOptions = () => {
@@ -99,5 +101,3 @@ const getListForm = (props) => {
         accept: () => accept()
     };
 };
-
-

@@ -20,7 +20,6 @@ const getStore = (p) => {
             try{
                 data = JSON.parse(str);
                 for(let d of data){// fix js string-number confusion
-                    d.day = (d.day - 0);
                     d.interval = (d.interval -0);
                 }
             }
@@ -49,10 +48,10 @@ const getStore = (p) => {
         }
         else{
             // don't overwrite existing start date
-            if(data[index].hasOwnProperty("startDate")){
-                newData.startDate = data[index].startDate;
-                newData.day = data[index].day;
-            }
+//            if(data[index].hasOwnProperty("startDate")){
+//                newData.startDate = data[index].startDate;
+//                newData.day = data[index].day;
+//            }
             data[index] = newData;
         }
 
@@ -150,7 +149,7 @@ const Id = (() => {
     return {
         name: (p, op) => p + op + "name",
         amount: (p, op) => p + op + "amount",
-        day: (p, op) => p + op + "day",
+        date: (p, op) => p + op + "date",
         interval: (p, op) => p + op + "interval",
         comment: (p, op) => p + op + "comment",
         
@@ -158,4 +157,3 @@ const Id = (() => {
         modal: (p, op) => "modal" + p + op
     };
 })();
-
